@@ -1,0 +1,99 @@
+Definição da nossa linguagem:
+
+    1. Declarar variaveis atomicas do tipo inteiro, com os quais se podem realizar as habituais 
+    operacoes aritmeticas, relacionais e logicas.
+
+        -> int nome
+        
+    2. Operações aritméticas
+        
+        '+' -> add 1 2
+        '-' -> sub 1 2
+        '*' -> mul 2 3
+        '/' -> div 4 2
+        '%' -> mod 5 4
+
+    3. Operações relacionais
+
+        '==' -> eq a b
+        '!=' -> dif a b
+        '>'  -> grt a b
+        '>=' -> geq a b
+        '<'  -> lwr a b
+        '<=' -> leq a b
+
+    4. Operações lógicas
+
+        '&&' -> and a b
+        '||' -> or a b
+        '!'  -> not a
+
+    5. Atribuições
+
+         '=' -> atrib var exp
+
+    6. Input e output
+
+         read var
+         write var
+
+    7. Instruções condicionais
+
+         if cond then action1 else action2 
+        
+    8. Instruções cíclicas
+
+        for (atrib var exp) cond opAritm{
+            codigo
+        }
+
+        while cond{
+            codigo
+        }
+
+
+    Exemplos:
+
+        1.Ler inteiros até ser introduzido um 0 e imprimir a média inteira
+
+        start
+            int x
+            int sum
+            int med
+            int count
+            atrib x -1
+            while (dif x 0){
+                read x
+                atrib sum (add sum x)
+                atrib count (add count 1)
+            }
+            atrib med (div sum count)
+            write med 
+        end
+
+        2.Imprimir números de um a dez
+
+        start
+            int i
+            for (atrib i 1) (leq i 10) (atrib i (add i 1)){
+                write i
+            }
+        end 
+
+        3.Ler 5 números e imprimir os que são maiores do que 'a' e menores do que 'b'
+
+        start
+            int a
+            int b
+            int i
+            int n
+            read a
+            read b
+            for (atrib i 1) (leq i 5) (atrib i (add i 1)){
+                read n
+                if (and (lwr n b) (grt n a))
+                then (write n)
+            }
+        end
+
+
