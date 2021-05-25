@@ -2,8 +2,11 @@
 # tokenizer para a linguagem
 #
 #
-#       in: (3-1)*5+8/3
-#       out: PA NUM SUB NUM PF MUL NUM ADD NUM DIV NUM
+#       in: int a
+#       out: INT ID
+#
+#       in: atrib (a (mul 2 3))
+#       out: ATRIB '(' ID '(' MUL NUM NUM ')' ')'
 #------------------------------------------------------------
 
 import ply.lex as lex # importar só a parte léxica do ply
