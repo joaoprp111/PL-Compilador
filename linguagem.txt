@@ -3,7 +3,7 @@ Definição da nossa linguagem:
     1. Declarar variaveis atomicas do tipo inteiro, com os quais se podem realizar as habituais 
     operacoes aritmeticas, relacionais e logicas.
 
-        -> int nome
+        -> int nome;
         
     2. Operações aritméticas
         
@@ -78,7 +78,7 @@ Definição da nossa linguagem:
         2.Imprimir números de um a dez
 
         start
-            int i
+            int (atrib i 0)
             for (leq i 10) {
                 write i
                 atrib i (add i 1)
@@ -94,10 +94,12 @@ Definição da nossa linguagem:
             int n
             read a
             read b
-            for (atrib i 1) (leq i 5) (atrib i (add i 1)){
+            atrib i 0
+            for (leq i 5)){
                 read n
                 if (and (lwr n b) (grt n a))
                 then (write n)
+                atrib (i (add i 1))
             }
         end
 

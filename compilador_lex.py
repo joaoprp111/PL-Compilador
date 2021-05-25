@@ -15,7 +15,7 @@ import sys
 # Token declarations
 tokens = [
     'START', 'END',
-    'INT', 'NUM',
+    'INT', 'NUM', 'STRING',
     'ID',
     'ATRIB',
     'ADD','SUB','MUL','DIV','MOD',
@@ -26,14 +26,13 @@ tokens = [
     'FOR','DO'
 ]
 
-literals = ['(',')','{','}']
+literals = ['(',')','{','}',';','-']
 
 # Token regex
 
 # Tokens with some action code
 def t_NUM(t):
     r'\d+'
-    t.value = int(t.value)
     return t
 
 def t_INT(t):
@@ -140,6 +139,10 @@ def t_ID(t):
     r'\_?[a-zA-Z]+\d*'
     return t
 
+def t_STRING(t):
+    r'\"[^"]*\"'
+    return t
+
 # Tracking line numbers
 def t_newline(t):
     r'\n+'
@@ -155,9 +158,3 @@ def t_error(t):
 
 # build the lexer
 lexer = lex.lex()
-
-# reading input
-for linha in sys.stdin:
-    lexer.input(linha)
-    for tok in lexer:
-        print(tok)
