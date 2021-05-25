@@ -39,15 +39,19 @@ Definição da nossa linguagem:
 
     7. Instruções condicionais
 
-         if cond then action1 else action2 
+         if (cond) then {
+             action1
+         } else {
+             action2
+         } 
         
     8. Instruções cíclicas
 
-        for (atrib var exp) cond opAritm{
+        for (cond){
             codigo
-        }
+        } do
 
-        while cond{
+        while (cond){
             codigo
         }
 
@@ -75,9 +79,10 @@ Definição da nossa linguagem:
 
         start
             int i
-            for (atrib i 1) (leq i 10) (atrib i (add i 1)){
+            for (leq i 10) {
                 write i
-            }
+                atrib i (add i 1)
+            } do
         end 
 
         3.Ler 5 números e imprimir os que são maiores do que 'a' e menores do que 'b'
