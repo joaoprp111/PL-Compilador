@@ -1,7 +1,9 @@
 int x
 int b = 4
+int c = add(b 3)
 
 start
     write(add(2 3))
     write(b)
+    write(c)
 end

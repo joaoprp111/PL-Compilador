@@ -20,13 +20,10 @@
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
 #  CabecaInstrs --> Exp
-#                 | WRITE '(' WriteContent ')'
+#                 | WRITE '(' Exp ')'
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
-#
-#  WriteContent -> ID 
-#                | Exp 
 #
 #
 #  Exp --> ADD '(' Exp Termo ')'
@@ -41,6 +38,7 @@
 #
 #  Factor --> '(' Exp ')'
 #           |  NUM
+#           |  ID
 #
 #
 #
@@ -112,11 +110,7 @@ def p_CaudaInstrs_empty(p):
 
 
 #Produções writeContent
-def p_WriteContent_ID(p):
-    "WriteContent : ID"
-    p[0] = '\nPUSHG ' + str(parser.registers[p[1]][1])
-
-def p_WriteContent_group(p):
+def p_WriteContent_Exp(p):
     "WriteContent : Exp"
     p[0] = p[1]
 
@@ -124,11 +118,11 @@ def p_WriteContent_group(p):
 #Produções Exp
 def p_Exp_add(p):
     "Exp : ADD '(' Exp Termo ')'"
-    p[0] = p[3] + '\nADD'
+    p[0] = p[3] + p[4] + '\nADD'
 
 def p_Exp_sub(p):
     "Exp : SUB '(' Exp Termo ')'"
-    p[0] = p[3] + '\nSUB'
+    p[0] = p[3] + p[4] + '\nSUB'
 
 def p_Exp_Termo(p):
     "Exp : Termo"
@@ -137,20 +131,15 @@ def p_Exp_Termo(p):
 #Produções Termo
 def p_Termo_mul(p):
     "Termo : MUL '(' Exp Termo ')'"
-    p[0] = p[3] + '\nMUL'
+    p[0] = p[3] + p[4] + '\nMUL'
 
 def p_Termo_div(p):
     "Termo : DIV '(' Exp Termo ')'"
-    p[0] = p[3] + '\nDIV'
-    # if(p[4] != 0):
-    #     p[0] = p[3] / p[4]
-    # else:
-    #     print('Erro: divisão por 0. A continuar com o dividendo: ',p[3])
-    #     p[0] = p[3]
+    p[0] = p[3] + p[4] + '\nDIV'
 
 def p_Termo_mod(p):
     "Termo : MOD '(' Exp Termo ')'"
-    p[0] = p[3] + '\nMOD'
+    p[0] = p[3] + p[4] + '\nMOD'
 
 def p_Termo_factor(p):
     "Termo : Factor"
@@ -164,6 +153,10 @@ def p_Factor_group(p):
 def p_Factor_num(p):
     "Factor : NUM"
     p[0] = '\nPUSHI ' + p[1]
+
+def p_Factor_ID(p):
+    "Factor : ID"
+    p[0] = '\nPUSHG ' + str(parser.registers[p[1]][1])
 
 
 # Error rule for syntax errors
