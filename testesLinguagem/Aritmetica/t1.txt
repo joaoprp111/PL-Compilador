@@ -1,0 +1,3 @@
+start 
+	write (add(mul(2 3) div(2 1)))
+end
