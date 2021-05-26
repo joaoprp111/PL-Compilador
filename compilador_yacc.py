@@ -14,16 +14,25 @@
 #  Decl --> INT ID DeclAtrib
 #
 #
-#  DeclAtrib --> '=' Exp
+#  DeclAtrib --> '=' Relac
 #              | 
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
-#  CabecaInstrs --> Exp
-#                 | WRITE '(' Exp ')'
+#  CabecaInstrs --> Relac
+#                 | WRITE '(' Relac ')'
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
+#
+#
+#  Relac -->  EQ '(' Relac Exp ')'
+#          |  DIFF '(' Relac Exp ')'
+#          |  GRT '(' Relac Exp ')'
+#          |  GEQ '(' Relac Exp ')'
+#          |  LWR '(' Relac Exp ')'
+#          |  LEQ '(' Relac Exp ')'
+#          |  Exp
 #
 #
 #  Exp --> ADD '(' Exp Termo ')'
@@ -75,7 +84,7 @@ def p_Decl(p):
 
 #Produções DeclAtrib
 def p_DeclAtrib(p):
-    "DeclAtrib : '=' Exp"
+    "DeclAtrib : '=' Relac"
     p[0] = p[2]
 
 def p_DeclAtrib_empty(p):
@@ -90,11 +99,11 @@ def p_Instrs(p):
 
 #Produções de uma instrução
 def p_CabecInstrs_Exp(p):
-    "CabecaInstrs : Exp"
+    "CabecaInstrs : Relac"
     p[0] = p[1]
 
 def p_CabecInstrs_Write(p):
-    "CabecaInstrs : WRITE '(' WriteContent ')'"
+    "CabecaInstrs : WRITE '(' Relac ')'"
     p[0] = p[3] + '\nWRITEI'
 
 
@@ -108,11 +117,35 @@ def p_CaudaInstrs_empty(p):
     "CaudaInstrs : "
     p[0] = ""
 
+#Produções das operações relacionais
+def p_Relac_EQ(p):
+    "Relac : EQ '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nEQUAL'
 
-#Produções writeContent
-def p_WriteContent_Exp(p):
-    "WriteContent : Exp"
-    p[0] = p[1]
+def p_Relac_DIFF(p):
+    "Relac : DIFF '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nEQUAL\nNOT'
+    
+def p_Relac_GRT(p):
+    "Relac : GRT '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nSUP'
+    
+def p_Relac_GEQ(p):
+    "Relac : GEQ '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nSUPEQ'
+
+def p_Relac_LWR(p):
+    "Relac : LWR '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nINF'
+
+def p_Relac_LEQ(p):
+    "Relac : LEQ '(' Relac Exp ')'"
+    p[0] = p[3] + p[4] + '\nINFEQ'
+
+def p_Relac_Exp(p):
+    "Relac : Exp"
+    p[0] = [1]
+
 
 
 #Produções Exp
@@ -147,7 +180,7 @@ def p_Termo_factor(p):
 
 #Produções Factor
 def p_Factor_group(p):
-    "Factor : '(' Exp ')'"
+    "Factor : '(' Relac ')'"
     p[0] = p[2]
 
 def p_Factor_num(p):
@@ -171,7 +204,7 @@ parser.registers = {}
 parser.gp = 0
 
 
-path = 'testesLinguagem/Declaracoes/'
+path = 'testesLinguagem/Relacionais/'
 print("Ficheiro para ler: ")
 i = input()
 path += i
