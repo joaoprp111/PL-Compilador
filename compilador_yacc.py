@@ -6,34 +6,41 @@
 #     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','DO','(',')','{','}',';','-'
 # }
 #
-#  Linguagem -> Decls START Instrs END
+#  Linguagem --> Decls START Instrs END
 #
-#  Decls -> Decl Decls
-#         |
+#  Decls --> Decl Decls
+#          |
 #
-#  Decl -> INT ID DeclAtrib
-#
-#
-#  DeclAtrib -> '=' Exp
-#             |
-#
-#  Instrs -> Exp
-#          | WRITE '(' Exp ')'
-#
-#  Exp --> ADD '(' Content ')'
-#      |  SUB '(' Content ')'
-#      |  Termo
-#
-#  Content -> Exp Termo
+#  Decl --> INT ID DeclAtrib
 #
 #
-#  Termo --> MUL '(' Content ')'
-#        |  DIV '(' Content ')'
-#        |  MOD '(' Content ')'
-#        |  Factor
+#  DeclAtrib --> '=' Exp
+#              | 
+#
+#  Instrs --> CabecaInstrs CaudaInstrs
+#
+#  CabecaInstrs --> Exp
+#                 | WRITE '(' WriteContent ')'
+#
+#  CaudaInstrs --> CabecaInstrs CaudaInstrs
+#                | 
+#
+#  WriteContent -> ID 
+#                | Exp 
+#
+#
+#  Exp --> ADD '(' Exp Termo ')'
+#       |  SUB '(' Exp Termo ')'
+#       |  Termo
+#
+#
+#  Termo --> MUL '(' Exp Termo ')'
+#         |  DIV '(' Exp Termo ')'
+#         |  MOD '(' Exp Termo ')'
+#         |  Factor
 #
 #  Factor --> '(' Exp ')'
-#          |  NUM
+#           |  NUM
 #
 #
 #
@@ -79,40 +86,61 @@ def p_DeclAtrib_empty(p):
 
 
 #Produções das instruções
-def p_Instrs_Exp(p):
-    "Instrs : Exp"
+def p_Instrs(p):
+    "Instrs : CabecaInstrs CaudaInstrs"
+    p[0] = p[1] + p[2]
+
+#Produções de uma instrução
+def p_CabecInstrs_Exp(p):
+    "CabecaInstrs : Exp"
     p[0] = p[1]
 
-def p_Instrs_write(p):
-    "Instrs : WRITE Exp"
-    p[0] = p[2] + '\nWRITEI'
+def p_CabecInstrs_Write(p):
+    "CabecaInstrs : WRITE '(' WriteContent ')'"
+    p[0] = p[3] + '\nWRITEI'
+
+
+
+#Produções cauda de instruções
+def p_CaudaInstrs_Instrs(p):
+    "CaudaInstrs : CabecaInstrs CaudaInstrs"
+    p[0] = p[1] + p[2]
+
+def p_CaudaInstrs_empty(p):
+    "CaudaInstrs : "
+    p[0] = ""
+
+
+#Produções writeContent
+def p_WriteContent_ID(p):
+    "WriteContent : ID"
+    p[0] = '\nPUSHG ' + str(parser.registers[p[1]][1])
+
+def p_WriteContent_group(p):
+    "WriteContent : Exp"
+    p[0] = p[1]
 
 
 #Produções Exp
 def p_Exp_add(p):
-    "Exp : ADD '(' Content ')'"
+    "Exp : ADD '(' Exp Termo ')'"
     p[0] = p[3] + '\nADD'
 
 def p_Exp_sub(p):
-    "Exp : SUB '(' Content ')'"
+    "Exp : SUB '(' Exp Termo ')'"
     p[0] = p[3] + '\nSUB'
 
 def p_Exp_Termo(p):
     "Exp : Termo"
     p[0] = p[1]
 
-#Produções Content
-def p_Content(p):
-    "Content : Exp Termo"
-    p[0] = p[1] + p[2]
-
 #Produções Termo
 def p_Termo_mul(p):
-    "Termo : MUL '(' Content ')'"
+    "Termo : MUL '(' Exp Termo ')'"
     p[0] = p[3] + '\nMUL'
 
 def p_Termo_div(p):
-    "Termo : DIV '(' Content ')'"
+    "Termo : DIV '(' Exp Termo ')'"
     p[0] = p[3] + '\nDIV'
     # if(p[4] != 0):
     #     p[0] = p[3] / p[4]
@@ -121,7 +149,7 @@ def p_Termo_div(p):
     #     p[0] = p[3]
 
 def p_Termo_mod(p):
-    "Termo : MOD '(' Content ')'"
+    "Termo : MOD '(' Exp Termo ')'"
     p[0] = p[3] + '\nMOD'
 
 def p_Termo_factor(p):
