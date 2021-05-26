@@ -11,19 +11,19 @@
 #  Instrs -> Exp
 #          | WRITE '(' Exp ')'
 #
-# Exp --> ADD '(' Content ')'
+#  Exp --> ADD '(' Content ')'
 #      |  SUB '(' Content ')'
 #      |  Termo
 #
-# Content -> Exp Termo 
+#  Content -> Exp Termo 
 #
 #
-# Termo --> MUL '(' Content ')'
+#  Termo --> MUL '(' Content ')'
 #        |  DIV '(' Content ')'
 #        |  MOD '(' Content ')'
 #        |  Factor
 #
-# Factor --> '(' Exp ')'
+#  Factor --> '(' Exp ')'
 #          |  NUM
 #
 #
@@ -99,6 +99,7 @@ def p_Factor_num(p):
     "Factor : NUM"
     p[0] = '\nPUSHI ' + p[1]
 
+
 # Error rule for syntax errors
 def p_error(p):
     print('Syntax error in input: ', p)
@@ -107,12 +108,23 @@ def p_error(p):
 parser = yacc.yacc()
 
 # Creating the model
-# parser.registers = {}
+parser.registers = {}
+parser.gp = 0
 
 # Read line from input and parse it
 result = ""
 for linha in sys.stdin:
     result += linha
 
-result = parser.parse(result)
-print(result)
+
+print("Ficheiro para ler: ")
+i = input()
+file = open(i)
+
+print("Output: ")
+o = input()
+
+f = open(o,"w")
+result = parser.parse(file)
+
+f.write(result)
