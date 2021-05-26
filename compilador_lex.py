@@ -26,7 +26,7 @@ tokens = [
     'FOR','DO'
 ]
 
-literals = ['(',')','{','}',';','-']
+literals = ['(',')','{','}',';','-','=']
 
 # Token regex
 
