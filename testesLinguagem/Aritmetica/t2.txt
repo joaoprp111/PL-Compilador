@@ -1,2 +1,22 @@
 start
-    
+    write ( 
+        sub (
+            add(
+                div(
+                    2
+                    (
+                        add(
+                            3
+                            mul(4 5)
+                        )
+                    )
+                )
+                3
+            )
+            div(
+                44
+                1
+            )
+        ) 
+    ) 
+end

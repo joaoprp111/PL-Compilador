@@ -15,8 +15,7 @@
 #      |  SUB '(' Content ')'
 #      |  Termo
 #
-# Content -> Exp Termo
-#          | Factor Factor
+# Content -> Exp Termo 
 #
 #
 # Termo --> MUL '(' Content ')'
@@ -65,13 +64,9 @@ def p_Exp_Termo(p):
     p[0] = p[1]
 
 #Produções Content
-def p_Content_ExpTerm(p):
+def p_Content(p):
     "Content : Exp Termo"
     p[0] = p[1] + p[2]
-
-def p_Content_Factors(p):
-    "Content : Factor Factor"
-    p[0] = '\nPUSHI ' + p[1] + '\nPUSHI ' + p[2]
 
 #Produções Termo
 def p_Termo_mul(p):
@@ -102,7 +97,7 @@ def p_Factor_group(p):
 
 def p_Factor_num(p):
     "Factor : NUM"
-    p[0] = p[1]
+    p[0] = '\nPUSHI ' + p[1]
 
 # Error rule for syntax errors
 def p_error(p):
