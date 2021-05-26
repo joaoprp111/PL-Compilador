@@ -9,17 +9,19 @@
 #  Linguagem -> START Exp END
 #
 #
-# Exp --> ADD Termo Exp
-#      |  SUB Termo Exp
+# Exp --> ADD '(' Content ')'
+#      |  SUB '(' Content ')'
 #      |  Termo
 #
-# Termo --> MUL Termo Factor
-#        |  DIV Termo Factor
+# Content -> Factor Factor
+#          | Exp Termo
+#
+#
+# Termo --> MUL '(' Content ')'
+#        |  DIV '(' Content ')'
 #        |  Factor
 #
-# Factor --> '(' Exp ')'
-#         |   NUM
-#         |   '-' NUM
+# Factor --> NUM
 #
 #
 #
@@ -29,46 +31,42 @@ import sys
 
 from compilador_lex import tokens
 
-# def p_Comando_write(p):
-#     "Comando : '(' READ id ')'"
-#     valor = input("Introduza um valor inteiro: ")
-#     p.parser.registers.update({p[3]: int(valor)})
-#
-# def p_Comando_read(p):
-#     "Comando : '(' PRINT Exp ')'"
-#     print(p[3])
-#
-# def p_Comando_atrib(p):
-#     "Comando : '(' SET id Exp ')'"
-#     p.parser.registers.update({p[3]: p[4]})
-#
-# def p_Comando_despejar(p):
-#     "Comando : DUMP"
-#     print(p.parser.registers)
-
+#Produção da linguagem
 def p_Linguagem(p):
     "Linguagem : START Exp END"
     p[0] = 'START\n' + p[2] + 'STOP\n'
 
+
+#Produções Exp
 def p_Exp_add(p):
-    "Exp : ADD '(' Exp Termo ')'"
-    p[0] = 'PUSHI ' + p[3] + '\n' + 'PUSHI ' + p[4] + '\n' + 'ADD\n'
+    "Exp : ADD '(' Content ')'"
+    p[0] = p[3] + 'ADD\n'
 
 def p_Exp_sub(p):
-    "Exp : SUB '(' Exp Termo ')'"
-    p[0] = 'PUSHI ' + p[3] + '\n' + 'PUSHI ' + p[4] + '\n' + 'SUB\n'
+    "Exp : SUB '(' Content ')'"
+    p[0] = p[3] + 'SUB\n'
 
-def p_Exp_termo(p):
+def p_Exp_Termo(p):
     "Exp : Termo"
     p[0] = p[1]
 
+#Produções Content
+def p_Content_Factors(p):
+    "Content : Factor Factor"
+    p[0] = 'PUSHI ' + p[1] + '\n' + 'PUSHI ' + p[2] + '\n'
+
+def p_Content_ExpTerm(p):
+    "Content : Exp Termo"
+    p[0] = p[1] + p[2]
+
+#Produções Termo
 def p_Termo_mul(p):
-    "Termo : MUL '(' Termo Factor ')'"
-    p[0] = 'PUSHI ' + p[3] + '\n' + 'PUSHI ' + p[4] + '\n' + 'MUL\n'
+    "Termo : MUL '(' Content ')'"
+    p[0] = p[3] + 'MUL\n'
 
 def p_Termo_div(p):
-    "Termo : DIV '(' Termo Factor ')'"
-    p[0] = 'PUSHI ' + p[3] + '\n' + 'PUSHI ' + p[4] + '\n' + 'DIV\n'
+    "Termo : DIV '(' Content ')'"
+    p[0] = p[3] + 'DIV\n'
     # if(p[4] != 0):
     #     p[0] = p[3] / p[4]
     # else:
@@ -79,21 +77,10 @@ def p_Termo_factor(p):
     "Termo : Factor"
     p[0] = p[1]
 
-def p_Factor_group(p):
-    "Factor : '(' Exp ')'"
-    p[0] = p[2]
-
+#Produções Factor
 def p_Factor_num(p):
     "Factor : NUM"
     p[0] = p[1]
-
-# def p_Factor_id(p):
-#     "Factor : id"
-#     p[0] = p.parser.registers.get(p[1])
-
-# def p_Factor_negativo(p):
-#     "Factor : '-' NUM"
-#     p[0] = int(p[1] + p[2])
 
 # Error rule for syntax errors
 def p_error(p):

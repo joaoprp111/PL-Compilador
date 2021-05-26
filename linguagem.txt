@@ -4,33 +4,34 @@ Definição da nossa linguagem:
     operacoes aritmeticas, relacionais e logicas.
 
         -> int nome;
+        -> int i atrib (i 0); (int i = 0 do C)
         
     2. Operações aritméticas
         
-        '+' -> add 1 2
-        '-' -> sub 1 2
-        '*' -> mul 2 3
-        '/' -> div 4 2
-        '%' -> mod 5 4
+        '+' -> add (1 2)
+        '-' -> sub (1 2)
+        '*' -> mul (2 3)
+        '/' -> div (4 2)
+        '%' -> mod (5 4)
 
     3. Operações relacionais
 
-        '==' -> eq a b
-        '!=' -> dif a b
-        '>'  -> grt a b
-        '>=' -> geq a b
-        '<'  -> lwr a b
-        '<=' -> leq a b
+        '==' -> eq (a b)
+        '!=' -> dif (a b)
+        '>'  -> grt (a b)
+        '>=' -> geq (a b)
+        '<'  -> lwr (a b)
+        '<=' -> leq (a b)
 
     4. Operações lógicas
 
-        '&&' -> and a b
-        '||' -> or a b
-        '!'  -> not a
+        '&&' -> and (a b)
+        '||' -> or (a b)
+        '!'  -> not (a)
 
     5. Atribuições
 
-         '=' -> atrib var exp
+         '=' -> atrib (var exp)
 
     6. Input e output
 
@@ -61,45 +62,46 @@ Definição da nossa linguagem:
         1.Ler inteiros até ser introduzido um 0 e imprimir a média inteira
 
         start
-            int x
-            int sum
-            int med
-            int count
-            atrib x -1
-            while (dif x 0){
+            int x;
+            int sum;
+            int med;
+            int count;
+            atrib (x -1)
+            while (diff (x 0)){
                 read x
-                atrib sum (add sum x)
-                atrib count (add count 1)
+                atrib (sum add (sum x))
+                atrib (count add (count 1))
             }
-            atrib med (div sum count)
+            atrib (med div (sum count))
             write med 
         end
 
         2.Imprimir números de um a dez
 
         start
-            int (atrib i 0)
-            for (leq i 10) {
+            int i atrib (i 0);
+            for (leq (i 10)) {
                 write i
-                atrib i (add i 1)
+                atrib (i add (i 1))
             } do
         end 
 
         3.Ler 5 números e imprimir os que são maiores do que 'a' e menores do que 'b'
 
         start
-            int a
-            int b
-            int i
-            int n
+            int a;
+            int b;
+            int i;
+            int n;
             read a
             read b
-            atrib i 0
-            for (leq i 5)){
+            atrib (i 0)
+            for (leq (i 5)){
                 read n
-                if (and (lwr n b) (grt n a))
-                then (write n)
-                atrib (i (add i 1))
+                if (and (lwr (n b) grt (n a)) then {
+                    write n
+                }
+                atrib (i add (i 1))
             }
         end
 
