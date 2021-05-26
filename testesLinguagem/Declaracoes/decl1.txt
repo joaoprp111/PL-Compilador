@@ -1,0 +1,6 @@
+int x
+int b = 4
+
+start
+    write(add(2 3))
+end

@@ -6,7 +6,16 @@
 #     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','DO','(',')','{','}',';','-'
 # }
 #
-#  Linguagem -> START Instrs END
+#  Linguagem -> Decls START Instrs END
+#
+#  Decls -> Decl Decls
+#         |
+#
+#  Decl -> INT ID DeclAtrib
+#
+#
+#  DeclAtrib -> '=' Exp
+#             |
 #
 #  Instrs -> Exp
 #          | WRITE '(' Exp ')'
@@ -15,7 +24,7 @@
 #      |  SUB '(' Content ')'
 #      |  Termo
 #
-#  Content -> Exp Termo 
+#  Content -> Exp Termo
 #
 #
 #  Termo --> MUL '(' Content ')'
@@ -36,8 +45,37 @@ from compilador_lex import tokens
 
 #Produção da linguagem
 def p_Linguagem(p):
-    "Linguagem : START Instrs END"
-    p[0] = 'START\n' + p[2] + '\n\nSTOP'
+    "Linguagem : Decls START Instrs END"
+    p[0] = p[1] + '\n\nSTART\n' + p[3] + '\n\nSTOP\n'
+
+#Produções Decls
+def p_Decls(p):
+    "Decls : Decl Decls"
+    p[0] = p[1] + p[2]
+
+def p_Decls_empty(p):
+    "Decls : "
+    p[0] = ""
+
+#Produções Decl
+def p_Decl(p):
+    "Decl : INT ID DeclAtrib"
+    if(p[3] == ""):
+        p[0] = '\nPUSHI 0'
+    else:
+        p[0] = p[3]
+    parser.registers[p[2]] = [p[1],parser.gp]
+    parser.gp += 1
+
+
+#Produções DeclAtrib
+def p_DeclAtrib(p):
+    "DeclAtrib : '=' Exp"
+    p[0] = p[2]
+
+def p_DeclAtrib_empty(p):
+    "DeclAtrib : "
+    p[0] = ""
 
 
 #Produções das instruções
@@ -111,20 +149,21 @@ parser = yacc.yacc()
 parser.registers = {}
 parser.gp = 0
 
-# Read line from input and parse it
-result = ""
-for linha in sys.stdin:
-    result += linha
 
-
+path = 'testesLinguagem/Declaracoes/'
 print("Ficheiro para ler: ")
 i = input()
-file = open(i)
+path += i
+file = open(path,"r")
+
+cont = ''
+for linha in file:
+    cont += linha
 
 print("Output: ")
 o = input()
 
 f = open(o,"w")
-result = parser.parse(file)
+result = parser.parse(cont)
 
 f.write(result)
