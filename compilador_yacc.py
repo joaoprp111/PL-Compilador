@@ -40,12 +40,12 @@
 #       |  Termo
 #
 #
-#  Termo --> MUL '(' Exp Termo ')'
-#         |  DIV '(' Exp Termo ')'
-#         |  MOD '(' Exp Termo ')'
+#  Termo --> MUL '(' Termo Factor ')'
+#         |  DIV '(' Termo Factor ')'
+#         |  MOD '(' Termo Factor ')'
 #         |  Factor
 #
-#  Factor --> '(' Exp ')'
+#  Factor --> '(' Relac ')'
 #           |  NUM
 #           |  ID
 #
@@ -78,8 +78,8 @@ def p_Decl(p):
         p[0] = '\nPUSHI 0'
     else:
         p[0] = p[3]
-    parser.registers[p[2]] = [p[1],parser.gp]
-    parser.gp += 1
+    p.parser.registers.update({p[2]: (p[1],p.parser.gp)})
+    p.parser.gp += 1
 
 
 #Produções DeclAtrib
@@ -163,15 +163,15 @@ def p_Exp_Termo(p):
 
 #Produções Termo
 def p_Termo_mul(p):
-    "Termo : MUL '(' Exp Termo ')'"
+    "Termo : MUL '(' Termo Factor ')'"
     p[0] = p[3] + p[4] + '\nMUL'
 
 def p_Termo_div(p):
-    "Termo : DIV '(' Exp Termo ')'"
+    "Termo : DIV '(' Termo Factor ')'"
     p[0] = p[3] + p[4] + '\nDIV'
 
 def p_Termo_mod(p):
-    "Termo : MOD '(' Exp Termo ')'"
+    "Termo : MOD '(' Termo Factor ')'"
     p[0] = p[3] + p[4] + '\nMOD'
 
 def p_Termo_factor(p):
@@ -189,7 +189,8 @@ def p_Factor_num(p):
 
 def p_Factor_ID(p):
     "Factor : ID"
-    p[0] = '\nPUSHG ' + str(parser.registers[p[1]][1])
+    (_, offset) = p.parser.registers.get(p[1])
+    p[0] = '\nPUSHG ' + str(offset)
 
 
 # Error rule for syntax errors
