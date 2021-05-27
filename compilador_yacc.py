@@ -14,17 +14,26 @@
 #  Decl --> INT ID DeclAtrib
 #
 #
-#  DeclAtrib --> '=' Relac
+#  DeclAtrib --> '=' Logic
 #              | 
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
-#  CabecaInstrs --> Relac
-#                 | WRITE '(' Relac ')'
+#  CabecaInstrs --> Logic
+#                 | WRITE '(' Logic ')'
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
 #
+# 
+#  Logic --> AND '(' Logic LogicNot ')'
+#          | OR  '(' Logic LogicNot ')'
+#          | LogicNot
+#
+# 
+#  LogicNot --> NOT '(' LogicNot Relac ')'
+#             | Relac
+# 
 #
 #  Relac -->  EQ '(' Relac Exp ')'
 #          |  DIFF '(' Relac Exp ')'
@@ -45,7 +54,7 @@
 #         |  MOD '(' Termo Factor ')'
 #         |  Factor
 #
-#  Factor --> '(' Relac ')'
+#  Factor -->  '(' Logic ')'
 #           |  NUM
 #           |  ID
 #
@@ -84,7 +93,7 @@ def p_Decl(p):
 
 #Produções DeclAtrib
 def p_DeclAtrib(p):
-    "DeclAtrib : '=' Relac"
+    "DeclAtrib : '=' Logic"
     p[0] = p[2]
 
 def p_DeclAtrib_empty(p):
@@ -99,11 +108,11 @@ def p_Instrs(p):
 
 #Produções de uma instrução
 def p_CabecInstrs_Exp(p):
-    "CabecaInstrs : Relac"
+    "CabecaInstrs : Logic"
     p[0] = p[1]
 
 def p_CabecInstrs_Write(p):
-    "CabecaInstrs : WRITE '(' Relac ')'"
+    "CabecaInstrs : WRITE '(' Logic ')'"
     p[0] = p[3] + '\nWRITEI'
 
 
@@ -116,6 +125,33 @@ def p_CaudaInstrs_Instrs(p):
 def p_CaudaInstrs_empty(p):
     "CaudaInstrs : "
     p[0] = ''
+
+
+#Produções das operações lógicas
+def p_Logic_AND(p):
+    "Logic : AND '(' Logic LogicNot ')'"
+    p[0] = p[3] + p[4] + '\nADD\nPUSHI 2\nEQUAL'
+
+def p_Logic_OR(p):
+    "Logic : OR '(' Logic LogicNot ')'"
+    p[0] = p[3] + p[4] + '\nADD\nPUSHI 0\nEQUAL\nNOT'
+
+def p_Logic_LogicNot(p):
+    "Logic : LogicNot"
+    p[0] = p[1]
+
+
+
+#Produções para o not
+def p_LogicNot_not(p):
+    "LogicNot : NOT '(' LogicNot Relac ')'"
+    p[0] = p[3] + p[4] + '\nNOT'
+
+def p_LogicNot_Relac(p):
+    "LogicNot : Relac"
+    p[0] = p[1]
+
+
 
 #Produções das operações relacionais
 def p_Relac_EQ(p):
@@ -180,7 +216,7 @@ def p_Termo_factor(p):
 
 #Produções Factor
 def p_Factor_group(p):
-    "Factor : '(' Relac ')'"
+    "Factor : '(' Logic ')'"
     p[0] = p[2]
 
 def p_Factor_num(p):
@@ -205,7 +241,7 @@ parser.registers = {}
 parser.gp = 0
 
 
-path = 'testesLinguagem/Relacionais/'
+path = 'testesLinguagem/Logicas/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i

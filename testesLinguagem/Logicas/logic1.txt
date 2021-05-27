@@ -1,0 +1,20 @@
+int a = and(0 1)
+int b
+int c = geq(a b)
+
+start
+    write(or(a b))
+    write(
+        not(
+            (
+                or(a b)
+            )
+        )
+    )
+    write(
+        and(
+            or(c b)
+            not(a)
+        )
+    )
+end
