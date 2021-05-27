@@ -3,7 +3,9 @@ int b
 int c = geq(a b)
 
 start
-    write(or(a b))
+    write(
+        or(a b)
+    )
     write(
         not(
             (

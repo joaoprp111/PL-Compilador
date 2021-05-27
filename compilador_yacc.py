@@ -31,7 +31,7 @@
 #          | LogicNot
 #
 # 
-#  LogicNot --> NOT '(' LogicNot Relac ')'
+#  LogicNot --> NOT '(' LogicNot ')'
 #             | Relac
 # 
 #
@@ -144,8 +144,8 @@ def p_Logic_LogicNot(p):
 
 #Produções para o not
 def p_LogicNot_not(p):
-    "LogicNot : NOT '(' LogicNot Relac ')'"
-    p[0] = p[3] + p[4] + '\nNOT'
+    "LogicNot : NOT '(' LogicNot ')'"
+    p[0] = p[3] + '\nNOT'
 
 def p_LogicNot_Relac(p):
     "LogicNot : Relac"
