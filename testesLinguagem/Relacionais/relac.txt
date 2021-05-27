@@ -3,7 +3,7 @@ int b = 55
 
 start
 
-    write(geq(4 2))
+    write(geq(x 2))
     write(lwr(3 3))
     write(grt(4 3))
     write(leq(2 b))
