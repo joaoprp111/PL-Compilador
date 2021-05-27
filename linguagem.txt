@@ -31,7 +31,7 @@ Definição da nossa linguagem:
 
     5. Atribuições
 
-         '=' -> atrib (var exp)
+         '=' -> atrib (var (exp))
 
     6. Input e output
 

@@ -19,8 +19,10 @@
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
-#  CabecaInstrs --> Logic
+#  CabecaInstrs --> ATRIB '(' ID '(' Logic ')' ')'
 #                 | WRITE '(' Logic ')'
+#
+#
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
@@ -31,16 +33,16 @@
 #          | LogicNot
 #
 # 
-#  LogicNot --> NOT '(' LogicNot ')'
+#  LogicNot --> NOT '(' Logic ')'
 #             | Relac
 # 
 #
-#  Relac -->  EQ '(' Relac Exp ')'
-#          |  DIFF '(' Relac Exp ')'
-#          |  GRT '(' Relac Exp ')'
-#          |  GEQ '(' Relac Exp ')'
-#          |  LWR '(' Relac Exp ')'
-#          |  LEQ '(' Relac Exp ')'
+#  Relac -->  EQ '(' Logic Exp ')'
+#          |  DIFF '(' Logic Exp ')'
+#          |  GRT '(' Logic Exp ')'
+#          |  GEQ '(' Logic Exp ')'
+#          |  LWR '(' Logic Exp ')'
+#          |  LEQ '(' Logic Exp ')'
 #          |  Exp
 #
 #
@@ -49,9 +51,9 @@
 #       |  Termo
 #
 #
-#  Termo --> MUL '(' Termo Factor ')'
-#         |  DIV '(' Termo Factor ')'
-#         |  MOD '(' Termo Factor ')'
+#  Termo --> MUL '(' Exp Termo ')'
+#         |  DIV '(' Exp Termo ')'
+#         |  MOD '(' Exp Termo ')'
 #         |  Factor
 #
 #  Factor -->  '(' Logic ')'
@@ -107,9 +109,9 @@ def p_Instrs(p):
     p[0] = p[1] + p[2]
 
 #Produções de uma instrução
-def p_CabecInstrs_Exp(p):
-    "CabecaInstrs : Logic"
-    p[0] = p[1]
+def p_CabecInstrs_Atrib(p):
+    "CabecaInstrs : ATRIB '(' ID '(' Logic ')' ')'"
+    #Falta fazer 
 
 def p_CabecInstrs_Write(p):
     "CabecaInstrs : WRITE '(' Logic ')'"
@@ -144,7 +146,7 @@ def p_Logic_LogicNot(p):
 
 #Produções para o not
 def p_LogicNot_not(p):
-    "LogicNot : NOT '(' LogicNot ')'"
+    "LogicNot : NOT '(' Logic ')'"
     p[0] = p[3] + '\nNOT'
 
 def p_LogicNot_Relac(p):
@@ -155,27 +157,27 @@ def p_LogicNot_Relac(p):
 
 #Produções das operações relacionais
 def p_Relac_EQ(p):
-    "Relac : EQ '(' Relac Exp ')'"
+    "Relac : EQ '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nEQUAL'
 
 def p_Relac_DIFF(p):
-    "Relac : DIFF '(' Relac Exp ')'"
+    "Relac : DIFF '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nEQUAL\nNOT'
     
 def p_Relac_GRT(p):
-    "Relac : GRT '(' Relac Exp ')'"
+    "Relac : GRT '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nSUP'
     
 def p_Relac_GEQ(p):
-    "Relac : GEQ '(' Relac Exp ')'"
+    "Relac : GEQ '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nSUPEQ'
 
 def p_Relac_LWR(p):
-    "Relac : LWR '(' Relac Exp ')'"
+    "Relac : LWR '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nINF'
 
 def p_Relac_LEQ(p):
-    "Relac : LEQ '(' Relac Exp ')'"
+    "Relac : LEQ '(' Logic Exp ')'"
     p[0] = p[3] + p[4] + '\nINFEQ'
 
 def p_Relac_Exp(p):
@@ -199,15 +201,15 @@ def p_Exp_Termo(p):
 
 #Produções Termo
 def p_Termo_mul(p):
-    "Termo : MUL '(' Termo Factor ')'"
+    "Termo : MUL '(' Exp Termo ')'"
     p[0] = p[3] + p[4] + '\nMUL'
 
 def p_Termo_div(p):
-    "Termo : DIV '(' Termo Factor ')'"
+    "Termo : DIV '(' Exp Termo ')'"
     p[0] = p[3] + p[4] + '\nDIV'
 
 def p_Termo_mod(p):
-    "Termo : MOD '(' Termo Factor ')'"
+    "Termo : MOD '(' Exp Termo ')'"
     p[0] = p[3] + p[4] + '\nMOD'
 
 def p_Termo_factor(p):
@@ -241,7 +243,7 @@ parser.registers = {}
 parser.gp = 0
 
 
-path = 'testesLinguagem/Logicas/'
+path = 'testesLinguagem/Declaracoes/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i

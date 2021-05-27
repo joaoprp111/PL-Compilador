@@ -8,9 +8,7 @@ start
     )
     write(
         not(
-            (
-                or(a b)
-            )
+            or(a b)
         )
     )
     write(
