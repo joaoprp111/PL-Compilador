@@ -1,0 +1,19 @@
+int x
+int y = mul(3 x)
+int z = 56
+
+start
+    atrib (x
+            (
+                 add(div(y z) 5) 
+            )
+    )
+    atrib (z 
+            ( 
+             not(diff(x z)) 
+            )
+    )
+    write(x)
+    write(y)
+    write(z)
+end

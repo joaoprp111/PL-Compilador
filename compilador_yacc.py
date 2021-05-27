@@ -111,7 +111,8 @@ def p_Instrs(p):
 #Produções de uma instrução
 def p_CabecInstrs_Atrib(p):
     "CabecaInstrs : ATRIB '(' ID '(' Logic ')' ')'"
-    #Falta fazer 
+    (_,offset) = p.parser.registers.get(p[3])
+    p[0] = p[5] + '\nSTOREG ' + str(offset)
 
 def p_CabecInstrs_Write(p):
     "CabecaInstrs : WRITE '(' Logic ')'"
@@ -243,7 +244,7 @@ parser.registers = {}
 parser.gp = 0
 
 
-path = 'testesLinguagem/Declaracoes/'
+path = 'testesLinguagem/Atribuicoes/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i
