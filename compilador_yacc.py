@@ -69,7 +69,7 @@ def p_Decls(p):
 
 def p_Decls_empty(p):
     "Decls : "
-    p[0] = ""
+    p[0] = ''
 
 #Produções Decl
 def p_Decl(p):
@@ -89,7 +89,7 @@ def p_DeclAtrib(p):
 
 def p_DeclAtrib_empty(p):
     "DeclAtrib : "
-    p[0] = ""
+    p[0] = ''
 
 
 #Produções das instruções
@@ -115,7 +115,7 @@ def p_CaudaInstrs_Instrs(p):
 
 def p_CaudaInstrs_empty(p):
     "CaudaInstrs : "
-    p[0] = ""
+    p[0] = ''
 
 #Produções das operações relacionais
 def p_Relac_EQ(p):
@@ -144,7 +144,7 @@ def p_Relac_LEQ(p):
 
 def p_Relac_Exp(p):
     "Relac : Exp"
-    p[0] = [1]
+    p[0] = p[1]
 
 
 
@@ -208,8 +208,8 @@ parser.gp = 0
 path = 'testesLinguagem/Relacionais/'
 print("Ficheiro para ler: ")
 i = input()
-path += i
-file = open(path,"r")
+pathI = path + i
+file = open(pathI,"r")
 
 cont = ''
 for linha in file:
@@ -217,8 +217,9 @@ for linha in file:
 
 print("Output: ")
 o = input()
+pathO = path + o
 
-f = open(o,"w")
+f = open(pathO,"w")
 result = parser.parse(cont)
 
 f.write(result)
