@@ -20,6 +20,7 @@
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
 #  CabecaInstrs --> ATRIB '(' ID '(' Logic ')' ')'
+#                 | READ '(' ID ')'
 #                 | WRITE '(' Logic ')'
 #
 #
@@ -113,6 +114,11 @@ def p_CabecInstrs_Atrib(p):
     "CabecaInstrs : ATRIB '(' ID '(' Logic ')' ')'"
     (_,offset) = p.parser.registers.get(p[3])
     p[0] = p[5] + '\nSTOREG ' + str(offset)
+
+def p_CabecInstrs_Read(p):
+    "CabecInstrs : READ '(' ID ')'"
+    (_,offset) = p.parser.registers.get(p[3])
+    p[0] = '\nREAD\nATOI\nSTOREG ' + str(offset)
 
 def p_CabecInstrs_Write(p):
     "CabecaInstrs : WRITE '(' Logic ')'"
