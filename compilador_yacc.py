@@ -3,7 +3,7 @@
 #     'START', 'END',
 #     'INT', 'NUM','ID','ATRIB',
 #     'ADD','SUB','MUL','DIV','MOD','EQ','DIFF','GRT','GEQ','LWR','LEQ',
-#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','(',')','{','}'
+#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','(',')','{','}',';'
 # }
 #
 #  Linguagem --> Decls START Instrs END
@@ -19,12 +19,15 @@
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
-#  CabecaInstrs --> ATRIB '(' ID '(' Logic ')' ')'
-#                 | READ '(' ID ')'
+#  CabecaInstrs --> READ '(' ID ')'
 #                 | WRITE '(' Logic ')'
 #                 | IF '(' Logic ')' THEN '{' Instrs '}'
 #                 | IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Intrs '}'
 #                 | FOR '(' Atrib ';' Logic ';' Atrib ')' '{' Instrs '}'
+#                 | Atrib
+#
+#  Atrib --> ATRIB '(' ID '(' Logic ')' ')'
+#
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
@@ -111,11 +114,6 @@ def p_Instrs(p):
     p[0] = p[1] + p[2]
 
 #Produções de uma instrução
-def p_CabecaInstrs_Atrib(p):
-    "CabecaInstrs : ATRIB '(' ID '(' Logic ')' ')'"
-    (_,offset) = p.parser.registers.get(p[3])
-    p[0] = p[5] + '\nSTOREG ' + str(offset)
-
 def p_CabecaInstrs_Read(p):
     "CabecaInstrs : READ '(' ID ')'"
     (_,offset) = p.parser.registers.get(p[3])
@@ -138,10 +136,23 @@ def p_CabecaInstrs_IfTE(p):
     p[0] = p[3] + "\nJZ ELSE" + counter + "\n" + p[7] + "\nJUMP ENDIF" + counter + "\n" + "\nELSE" + counter + ":\n" + p[11] + "\nENDIF" + counter + ":\n"
 
 def p_CabecaInstrs_For(p):
-    "CabecaInstrs : FOR '(' ATRIB ';' Logic ';' ATRIB ')' '{' Instrs '}'"
+    "CabecaInstrs : FOR '(' Atrib ';' Logic ';' Atrib ')' '{' Instrs '}'"
     p.parser.for_counter += 1
     counter = str(p.parser.for_counter)
     p[0] = p[3] + "\nBEGINFOR" + counter + ":\n" + p[5] + "\nJZ ENDFOR" + counter + "\n" + p[10] + p[7] + "\nJUMP BEGINFOR" + counter + "\n" + "\nENDFOR" + counter + ":\n"
+
+def p_CabecaInstrs_Atrib(p):
+    "CabecaInstrs : Atrib"
+    p[0] = p[1]
+
+
+
+
+#Produções atribuição
+def p_Atrib(p):
+    "Atrib : ATRIB '(' ID '(' Logic ')' ')'"
+    (_,offset) = p.parser.registers.get(p[3])
+    p[0] = p[5] + '\nSTOREG ' + str(offset)
 
 
 #Produções cauda de instruções
@@ -270,7 +281,7 @@ parser.if_counter = 0
 parser.for_counter = 0
 
 
-path = 'testesLinguagem/Condicionais/'
+path = 'testesLinguagem/Ciclos/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i

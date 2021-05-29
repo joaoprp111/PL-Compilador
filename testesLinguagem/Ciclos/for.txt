@@ -1,0 +1,8 @@
+int x
+int n = 10
+
+start
+    for ( atrib(x (1)); leq(x n); atrib(x (add(x 1))) ){
+        write (x)
+    }
+end

@@ -1,0 +1,16 @@
+int x = 3
+int y = 2
+int z = 56
+int a = add(y 3)
+int b = sub(z 1)
+int c = grt( a b )
+
+start
+    if ( c ) then {
+        atrib(x (a))
+    }
+    else{
+        atrib(x (b))
+    }
+    write(x)
+end
