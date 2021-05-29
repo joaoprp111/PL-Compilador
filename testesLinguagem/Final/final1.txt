@@ -1,0 +1,18 @@
+int input
+int i
+int acc
+int final = 1
+
+start
+    for( atrib(i (1)) ; and( leq(i 4) final ) ; atrib(i ( add(i 1) ) ) ){
+        read(input)
+        if( grt(i 1) ) then {
+            if( diff(acc input) ) then {
+                atrib(final (0))
+            }
+        } else{
+            atrib(acc (input))
+        }
+    }
+    write(final)
+end

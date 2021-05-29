@@ -4,7 +4,7 @@
 #     'INT', 'NUM','ID','ATRIB',
 #     'ADD','SUB','MUL','DIV','MOD','EQ','DIFF','GRT','GEQ','LWR','LEQ',
 #     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR',
-#     '(',')','{','}',';','[',']'
+#     '(',')','{','}',';','[',']','-'
 # }
 #
 #  Linguagem --> Decls START Instrs END
@@ -100,6 +100,7 @@
 #  Factor -->  '(' Logic ')'
 #           |  NUM
 #           |  ID
+#           |  '-' NUM
 #
 #
 #
@@ -377,6 +378,11 @@ def p_Factor_ID(p):
     (_, offset) = p.parser.registers.get(p[1])
     p[0] = '\nPUSHG ' + str(offset)
 
+def p_Factor_Negativos(p):
+    "Factor : '-' NUM"
+    p[0] = '\nPUSHI ' + str(-1 * int(p[2]))
+
+
 
 # Error rule for syntax errors
 def p_error(p):
@@ -393,7 +399,7 @@ parser.if_counter = 0
 parser.for_counter = 0
 
 
-path = 'testesLinguagem/Arrays/'
+path = 'testesLinguagem/Final/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i

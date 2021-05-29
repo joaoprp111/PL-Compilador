@@ -1,0 +1,15 @@
+int n = 3
+int prod = 1
+int i
+int input
+
+start
+    for ( atrib(i (1)) ; leq(i n) ; atrib(i ( add(i 1)) ) ){
+        read(input)
+        atrib(
+            prod
+            ( mul(prod input) )
+        )
+    }
+    write(prod)
+end

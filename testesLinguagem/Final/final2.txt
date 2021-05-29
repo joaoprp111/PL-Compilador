@@ -1,0 +1,20 @@
+int min
+int n
+int i
+int input
+
+start 
+    read(n)
+    for( atrib(i (1)) ; leq(i n) ; atrib(i ( add(i 1) ) ) ){
+        read(input)
+        if( eq(i 1) ) then {
+            atrib(min (input))
+        } else{
+            if ( lwr(input min) ) then {
+                atrib(min (input))
+            }
+        }
+    }
+
+    write(min)
+end
