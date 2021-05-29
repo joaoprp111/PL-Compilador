@@ -3,7 +3,7 @@
 #     'START', 'END',
 #     'INT', 'NUM','ID','ATRIB',
 #     'ADD','SUB','MUL','DIV','MOD','EQ','DIFF','GRT','GEQ','LWR','LEQ',
-#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','DO','(',')','{','}',';','-'
+#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','(',')','{','}'
 # }
 #
 #  Linguagem --> Decls START Instrs END
@@ -111,37 +111,37 @@ def p_Instrs(p):
     p[0] = p[1] + p[2]
 
 #Produções de uma instrução
-def p_CabecInstrs_Atrib(p):
+def p_CabecaInstrs_Atrib(p):
     "CabecaInstrs : ATRIB '(' ID '(' Logic ')' ')'"
     (_,offset) = p.parser.registers.get(p[3])
     p[0] = p[5] + '\nSTOREG ' + str(offset)
 
-def p_CabecInstrs_Read(p):
-    "CabecInstrs : READ '(' ID ')'"
+def p_CabecaInstrs_Read(p):
+    "CabecaInstrs : READ '(' ID ')'"
     (_,offset) = p.parser.registers.get(p[3])
     p[0] = '\nREAD\nATOI\nSTOREG ' + str(offset)
 
-def p_CabecInstrs_Write(p):
+def p_CabecaInstrs_Write(p):
     "CabecaInstrs : WRITE '(' Logic ')'"
     p[0] = p[3] + '\nWRITEI'
 
-def p_CabecInstrs_IfT(p):
-    "CabecInstrs : IF '(' Logic ')' THEN '{' Instrs '}'"
+def p_CabecaInstrs_IfT(p):
+    "CabecaInstrs : IF '(' Logic ')' THEN '{' Instrs '}'"
     p.parser.if_counter += 1
     counter = str(p.parser.if_counter)
-    p[0] = p[3] + "JZ ENDIF" + counter + "\n" + p[7] + "ENDIF" + counter + ":\n"
+    p[0] = p[3] + "\nJZ ENDIF" + counter + "\n" + p[7] + "\nENDIF" + counter + ":\n"
 
-def p_CabecInstrs_IfTE(p):
-    "CabecInstrs : IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Instrs '}'"
+def p_CabecaInstrs_IfTE(p):
+    "CabecaInstrs : IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Instrs '}'"
     p.parser.if_counter += 1
     counter = str(p.parser.if_counter)
-    p[0] = p[3] + "JZ ELSE" + counter + "\n" + p[7] + "JUMP ENDIF" + counter + "\n" + "ELSE" + counter + ":\n" + p[11] + "ENDIF" + counter + ":\n"
+    p[0] = p[3] + "\nJZ ELSE" + counter + "\n" + p[7] + "\nJUMP ENDIF" + counter + "\n" + "\nELSE" + counter + ":\n" + p[11] + "\nENDIF" + counter + ":\n"
 
-def p_CabecInstrs_For(p):
-    "CabecInstrs : FOR '(' ATRIB ';' Logic ';' ATRIB ')' '{' Instrs '}'"
+def p_CabecaInstrs_For(p):
+    "CabecaInstrs : FOR '(' ATRIB ';' Logic ';' ATRIB ')' '{' Instrs '}'"
     p.parser.for_counter += 1
     counter = str(p.parser.for_counter)
-    p[0] = p[3] + "BEGINFOR" + counter + ":\n" + p[5] + "JZ ENDFOR" + counter + "\n" + p[10] + p[7] + "JUMP BEGINFOR" + counter + "\n" + "ENDFOR" + counter + ":\n"
+    p[0] = p[3] + "\nBEGINFOR" + counter + ":\n" + p[5] + "\nJZ ENDFOR" + counter + "\n" + p[10] + p[7] + "\nJUMP BEGINFOR" + counter + "\n" + "\nENDFOR" + counter + ":\n"
 
 
 #Produções cauda de instruções
@@ -270,7 +270,7 @@ parser.if_counter = 0
 parser.for_counter = 0
 
 
-path = 'testesLinguagem/Atribuicoes/'
+path = 'testesLinguagem/Condicionais/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i

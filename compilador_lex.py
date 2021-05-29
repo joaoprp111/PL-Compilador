@@ -23,10 +23,10 @@ tokens = [
     'AND','OR','NOT',
     'READ','WRITE',
     'IF','THEN','ELSE',
-    'FOR','DO'
+    'FOR'
 ]
 
-literals = ['(',')','{','}',';','-','=']
+literals = ['(',')','{','}','=']
 
 # Token regex
 
@@ -117,10 +117,6 @@ def t_ELSE(t):
 
 def t_FOR(t):
     r'for'
-    return t
-
-def t_DO(t):
-    r'do'
     return t
 
 def t_ATRIB(t):
