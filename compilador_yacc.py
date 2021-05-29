@@ -27,13 +27,29 @@
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
-#  CabecaInstrs --> READ '(' ID ')'
-#                 | WRITE '(' Logic ')'
+#  CabecaInstrs --> READ '(' ReadContent ')'
+#                 | WRITE '(' WriteContent ')'
 #                 | IF '(' Logic ')' THEN '{' Instrs '}'
 #                 | IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Intrs '}'
 #                 | FOR '(' Atrib ';' Logic ';' Atrib ')' '{' Instrs '}'
 #                 | Atrib
 #                 | AtribArray
+#
+#
+#
+#  ReadContent --> ID ReadCRest
+#
+#  ReadCRest --> '[' Value ']'
+#              |
+#
+#
+#
+#  WriteContent --> Logic
+#                 | ID '[' Value ']'
+#
+#
+#
+#
 #
 #  Atrib --> ATRIB '(' ID '(' Logic ')' ')'
 #
@@ -147,12 +163,11 @@ def p_Instrs(p):
 
 #Produções de uma instrução
 def p_CabecaInstrs_Read(p):
-    "CabecaInstrs : READ '(' ID ')'"
-    (_,offset) = p.parser.registers.get(p[3])
-    p[0] = '\nREAD\nATOI\nSTOREG ' + str(offset)
+    "CabecaInstrs : READ '(' ReadContent ')'"
+    p[0] = p[3]
 
 def p_CabecaInstrs_Write(p):
-    "CabecaInstrs : WRITE '(' Logic ')'"
+    "CabecaInstrs : WRITE '(' WriteContent ')'"
     p[0] = p[3] + '\nWRITEI'
 
 def p_CabecaInstrs_IfT(p):
@@ -183,6 +198,41 @@ def p_CabecaInstrs_AtribArray(p):
 
 
 
+#Produções readContent
+def p_ReadContent(p):
+    "ReadContent : ID ReadCRest"
+    if(p[2] == ''):
+        (_,offset) = p.parser.registers.get(p[1])
+        p[0] = '\nREAD\nATOI\nSTOREG ' + str(offset)
+    else:
+        (_,offset) = p.parser.arrays.get(p[1])
+        p[0] = '\nPUSHGP\nPUSHI ' + str(offset) + '\nPADD' + p[2] + '\nREAD\nATOI\nSTOREN'
+
+
+
+#Produções ReadCRest
+def p_ReadCRest_Array(p):
+    "ReadCRest : '[' Value ']'"
+    p[0] = p[2]
+
+def p_ReadCRest_empty(p):
+    "ReadCRest : "
+    p[0] = ''
+
+
+
+
+#Produções WriteContent
+def p_WriteContent_Logic(p):
+    "WriteContent : Logic"
+    p[0] = p[1]
+
+def p_WriteContent_Array(p):
+    "WriteContent : ID '[' Value ']'"
+    (_,offset) = p.parser.arrays.get(p[1])
+    p[0] = '\nPUSHGP\nPUSHI ' + str(offset) + '\nPADD' + p[3] + '\nLOADN'
+
+
 
 #Produções atribuição
 def p_Atrib(p):
@@ -197,7 +247,7 @@ def p_Atrib(p):
 def p_AtribArray(p):
     "AtribArray : ATRIB '(' ID '[' Value ']' '(' Logic ')' ')'"
     (_,offset) = p.parser.arrays.get(p[3])
-    p[0] = '\nPUSHGP ' + '\nPUSHI ' + str(offset) + '\nPADD' + p[5] + '\nSTOREN'
+    p[0] = '\nPUSHGP ' + '\nPUSHI ' + str(offset) + '\nPADD' + p[5] + p[8] + '\nSTOREN'
 
 
 
@@ -206,6 +256,7 @@ def p_AtribArray(p):
 def p_Value_ID(p):
     "Value : ID"
     (_,offset) = p.parser.registers.get(p[1])
+    print(offset)
     p[0] = '\nPUSHG ' + str(offset)
 
 def p_Value_NUM(p):

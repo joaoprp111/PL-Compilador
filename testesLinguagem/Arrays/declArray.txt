@@ -1,0 +1,8 @@
+int i
+int array[10]
+
+start
+    for( atrib(i (1)); leq(i 10); atrib(i (add(i 1))) ){
+        write(i)
+    }
+end

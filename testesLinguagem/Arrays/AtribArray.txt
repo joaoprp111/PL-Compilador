@@ -1,0 +1,10 @@
+int a = 2
+int b
+int lista[5]
+
+start
+    atrib( lista[2] (a))
+    write(lista[2])
+    read(lista[3])
+    write(lista[3])
+end
