@@ -3,19 +3,27 @@
 #     'START', 'END',
 #     'INT', 'NUM','ID','ATRIB',
 #     'ADD','SUB','MUL','DIV','MOD','EQ','DIFF','GRT','GEQ','LWR','LEQ',
-#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR','(',')','{','}',';'
+#     'AND','OR','NOT','READ','WRITE','IF','THEN','ELSE','FOR',
+#     '(',')','{','}',';','[',']'
 # }
 #
 #  Linguagem --> Decls START Instrs END
 #
 #  Decls --> Decl Decls
-#          |
+#          | 
 #
-#  Decl --> INT ID DeclAtrib
+#  Decl --> INT ID DeclAtrib 
+#         | DeclArray
 #
 #
 #  DeclAtrib --> '=' Logic
 #              | 
+#
+#
+#  DeclArray --> INT ID '[' NUM ']'
+#
+#
+#
 #
 #  Instrs --> CabecaInstrs CaudaInstrs
 #
@@ -25,8 +33,20 @@
 #                 | IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Intrs '}'
 #                 | FOR '(' Atrib ';' Logic ';' Atrib ')' '{' Instrs '}'
 #                 | Atrib
+#                 | AtribArray
 #
 #  Atrib --> ATRIB '(' ID '(' Logic ')' ')'
+#
+#
+#  AtribArray --> ATRIB '(' ID '[' Value ']' '(' Logic ')' ')'
+#
+#
+#
+#  Value --> ID
+#          | NUM
+# 
+# 
+#
 #
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
@@ -97,9 +117,21 @@ def p_Decl(p):
     p.parser.registers.update({p[2]: (p[1],p.parser.gp)})
     p.parser.gp += 1
 
+def p_Decl_array(p):
+    "Decl : DeclArray"
+    p[0] = p[1]
+
+
+#Produções DeclArray
+def p_DeclArray(p):
+    "DeclArray : INT ID '[' NUM ']'"
+    p[0] = '\nPUSHN ' + p[4]
+    p.parser.arrays.update({p[2] : (p[1],p.parser.gp)})
+    p.parser.gp += int(p[4])
+
 
 #Produções DeclAtrib
-def p_DeclAtrib(p):
+def p_DeclAtrib_logic(p):
     "DeclAtrib : '=' Logic"
     p[0] = p[2]
 
@@ -145,6 +177,10 @@ def p_CabecaInstrs_Atrib(p):
     "CabecaInstrs : Atrib"
     p[0] = p[1]
 
+def p_CabecaInstrs_AtribArray(p):
+    "CabecaInstrs : AtribArray"
+    p[0] = p[1]
+
 
 
 
@@ -153,6 +189,30 @@ def p_Atrib(p):
     "Atrib : ATRIB '(' ID '(' Logic ')' ')'"
     (_,offset) = p.parser.registers.get(p[3])
     p[0] = p[5] + '\nSTOREG ' + str(offset)
+
+
+
+
+#Produções atribArray
+def p_AtribArray(p):
+    "AtribArray : ATRIB '(' ID '[' Value ']' '(' Logic ')' ')'"
+    (_,offset) = p.parser.arrays.get(p[3])
+    p[0] = '\nPUSHGP ' + '\nPUSHI ' + str(offset) + '\nPADD' + p[5] + '\nSTOREN'
+
+
+
+
+#Produções Value
+def p_Value_ID(p):
+    "Value : ID"
+    (_,offset) = p.parser.registers.get(p[1])
+    p[0] = '\nPUSHG ' + str(offset)
+
+def p_Value_NUM(p):
+    "Value : NUM"
+    p[0] = '\nPUSHI ' + p[1]
+
+
 
 
 #Produções cauda de instruções
@@ -276,12 +336,13 @@ parser = yacc.yacc()
 
 # Creating the model
 parser.registers = {}
+parser.arrays = {}
 parser.gp = 0
 parser.if_counter = 0
 parser.for_counter = 0
 
 
-path = 'testesLinguagem/Ciclos/'
+path = 'testesLinguagem/Arrays/'
 print("Ficheiro para ler: ")
 i = input()
 pathI = path + i
