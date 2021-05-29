@@ -22,13 +22,14 @@
 #  CabecaInstrs --> ATRIB '(' ID '(' Logic ')' ')'
 #                 | READ '(' ID ')'
 #                 | WRITE '(' Logic ')'
-#
-#
+#                 | IF '(' Logic ')' THEN '{' Instrs '}'
+#                 | IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Intrs '}'
+#                 | FOR '(' Atrib ';' Logic ';' Atrib ')' '{' Instrs '}'
 #
 #  CaudaInstrs --> CabecaInstrs CaudaInstrs
 #                | 
 #
-# 
+#  
 #  Logic --> AND '(' Logic LogicNot ')'
 #          | OR  '(' Logic LogicNot ')'
 #          | LogicNot
@@ -124,6 +125,23 @@ def p_CabecInstrs_Write(p):
     "CabecaInstrs : WRITE '(' Logic ')'"
     p[0] = p[3] + '\nWRITEI'
 
+def p_CabecInstrs_IfT(p):
+    "CabecInstrs : IF '(' Logic ')' THEN '{' Instrs '}'"
+    p.parser.if_counter += 1
+    counter = str(p.parser.if_counter)
+    p[0] = p[3] + "JZ ENDIF" + counter + "\n" + p[7] + "ENDIF" + counter + ":\n"
+
+def p_CabecInstrs_IfTE(p):
+    "CabecInstrs : IF '(' Logic ')' THEN '{' Instrs '}' ELSE '{' Instrs '}'"
+    p.parser.if_counter += 1
+    counter = str(p.parser.if_counter)
+    p[0] = p[3] + "JZ ELSE" + counter + "\n" + p[7] + "JUMP ENDIF" + counter + "\n" + "ELSE" + counter + ":\n" + p[11] + "ENDIF" + counter + ":\n"
+
+def p_CabecInstrs_For(p):
+    "CabecInstrs : FOR '(' ATRIB ';' Logic ';' ATRIB ')' '{' Instrs '}'"
+    p.parser.for_counter += 1
+    counter = str(p.parser.for_counter)
+    p[0] = p[3] + "BEGINFOR" + counter + ":\n" + p[5] + "JZ ENDFOR" + counter + "\n" + p[10] + p[7] + "JUMP BEGINFOR" + counter + "\n" + "ENDFOR" + counter + ":\n"
 
 
 #Produções cauda de instruções
@@ -248,6 +266,8 @@ parser = yacc.yacc()
 # Creating the model
 parser.registers = {}
 parser.gp = 0
+parser.if_counter = 0
+parser.for_counter = 0
 
 
 path = 'testesLinguagem/Atribuicoes/'
