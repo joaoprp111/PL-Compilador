@@ -4,7 +4,7 @@ Definição da nossa linguagem:
     operacoes aritmeticas, relacionais e logicas.
 
         -> int nome
-        -> int i atrib (i (0)) (int i = 0 do C)
+        -> int i = 0
         
     2. Operações aritméticas
         
