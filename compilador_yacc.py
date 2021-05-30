@@ -257,7 +257,6 @@ def p_AtribArray(p):
 def p_Value_ID(p):
     "Value : ID"
     (_,offset) = p.parser.registers.get(p[1])
-    print(offset)
     p[0] = '\nPUSHG ' + str(offset)
 
 def p_Value_NUM(p):

@@ -1,0 +1,19 @@
+int array[5]
+int i
+int input
+int index
+
+start
+
+    for( atrib(i (1)) ; leq(i 5) ; atrib(i (add(i 1))) ) {
+        read(input)
+        atrib( index ( sub(i 1) ) )
+        atrib( array[index] (input) )
+    }
+
+    for( atrib(i (5)) ; grt(i 0) ; atrib(i (sub(i 1))) ) {
+        atrib(index ( sub(i 1) ) )
+        write(array[index])
+    }
+
+end

@@ -1,0 +1,19 @@
+int minIntervalo
+int maxIntervalo
+int sum
+int i
+
+start
+
+    read(minIntervalo)
+    read(maxIntervalo)
+    for( atrib(i (minIntervalo)) ; leq(i maxIntervalo) ; atrib(i (add(i 1))) ){
+        if ( mod(i 2) ) then {
+            write(i)
+            atrib (sum (add(sum 1)))
+        }
+    }
+
+    write(sum)
+
+end
