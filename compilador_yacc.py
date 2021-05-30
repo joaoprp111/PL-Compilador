@@ -7,6 +7,17 @@
 #     '(',')','{','}',';','[',']','-'
 # }
 #
+# 
+# N = {
+#      Linguagem, Decls, Instrs, Decl, DeclAtrib, DeclArray,
+#      CabecaInstrs, CaudaInstrs,
+#      ReadContent, WriteContent, ReadCRest, Value,
+#      Atrib, AtribArray,
+#      Logic, LogicNot, Relac, Exp, Termo, Factor
+# }
+#
+#
+#
 #  Linguagem --> Decls START Instrs END
 #
 #  Decls --> Decl Decls
