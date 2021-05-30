@@ -8,11 +8,11 @@ Definição da nossa linguagem:
         
     2. Operações aritméticas
         
-        '+' -> add (1 2)
-        '-' -> sub (1 2)
-        '*' -> mul (2 3)
-        '/' -> div (4 2)
-        '%' -> mod (5 4)
+        '+' -> add (a b)
+        '-' -> sub (a b)
+        '*' -> mul (a b)
+        '/' -> div (a b)
+        '%' -> mod (a b)
 
     3. Operações relacionais
 
@@ -60,7 +60,7 @@ Definição da nossa linguagem:
 
         int lista[10]
 
-        lista[2] = exp
+        atrib( lista[2] (exp) )
         write(lista[4])
 
 
