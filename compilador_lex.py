@@ -15,7 +15,7 @@ import sys
 # Token declarations
 tokens = [
     'START', 'END',
-    'INT', 'NUM', 'STRING',
+    'INT', 'NUM',
     'ID',
     'ATRIB',
     'ADD','SUB','MUL','DIV','MOD',
@@ -133,10 +133,6 @@ def t_END(t):
 
 def t_ID(t):
     r'\_?[a-zA-Z]+\d*'
-    return t
-
-def t_STRING(t):
-    r'\"[^"]*\"'
     return t
 
 # Tracking line numbers
